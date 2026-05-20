@@ -7,7 +7,7 @@
 <meta name="generator" content="Asciidoctor 2.0.20">
 <meta name="author" content="Jan Brunner">
 <link rel="icon" type="image/png" href="themes/favicon.png">
-<title>Übersicht</title>
+<title>Pflichtenheft - Teamverwaltung</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -438,28 +438,61 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Übersicht</h1>
+<h1>Pflichtenheft - Teamverwaltung</h1>
 <div class="details">
 <span id="author" class="author">Jan Brunner</span><br>
 <span id="revnumber">version 1.0.0,</span>
-<span id="revdate">2026-05-04</span>
+<span id="revdate">2026-05-20</span>
 <br><span id="revremark">Spezifikation</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_ausgangssituation">1. Ausgangssituation</a></li>
-<li><a href="#_istzustand">2. Istzustand</a></li>
-<li><a href="#_problemstellung">3. Problemstellung</a></li>
-<li><a href="#_aufgabenstellung">4. Aufgabenstellung</a>
+<li><a href="#_ausgangssituation">1. Ausgangssituation</a>
 <ul class="sectlevel2">
-<li><a href="#_funktionale_anforderung">4.1. Funktionale Anforderung</a></li>
-<li><a href="#_nicht_funktionale_anforderung">4.2. Nicht funktionale Anforderung</a></li>
+<li><a href="#_organisationsübersicht">1.1. Organisationsübersicht</a></li>
+<li><a href="#_ligasystem_und_spielklassen">1.2. Ligasystem und Spielklassen</a></li>
+<li><a href="#_aktuelle_teamstruktur">1.3. Aktuelle Teamstruktur</a></li>
+</ul>
+</li>
+<li><a href="#_istzustand_aktueller_prozess">2. Istzustand (Aktueller Prozess)</a>
+<ul class="sectlevel2">
+<li><a href="#_spielerauswahl_ablauf">2.1. Spielerauswahl-Ablauf</a></li>
+</ul>
+</li>
+<li><a href="#_problemstellung">3. Problemstellung</a></li>
+<li><a href="#_aufgabenstellung_teamverwaltungs_portal">4. Aufgabenstellung: Teamverwaltungs-Portal</a>
+<ul class="sectlevel2">
+<li><a href="#_funktionale_anforderungen">4.1. Funktionale Anforderungen</a></li>
+<li><a href="#_nicht_funktionale_anforderungen">4.2. Nicht-funktionale Anforderungen</a></li>
 </ul>
 </li>
 <li><a href="#_ziele">5. Ziele</a></li>
-<li><a href="#_mengengerüst">6. Mengengerüst</a></li>
-<li><a href="#_rahmenbedingungen">7. Rahmenbedingungen</a></li>
+<li><a href="#_mengengerüst">6. Mengengerüst</a>
+<ul class="sectlevel2">
+<li><a href="#_datenvolumen">6.1. Datenvolumen</a></li>
+<li><a href="#_peak_loads">6.2. Peak-Loads</a></li>
+</ul>
+</li>
+<li><a href="#_rahmenbedingungen">7. Rahmenbedingungen</a>
+<ul class="sectlevel2">
+<li><a href="#_technologie_stack">7.1. Technologie-Stack</a></li>
+<li><a href="#_deployment_hosting">7.2. Deployment &amp; Hosting</a></li>
+<li><a href="#_kosten">7.3. Kosten</a></li>
+</ul>
+</li>
+<li><a href="#_benutzerrollen_und_zugriffskontrolle">8. Benutzerrollen und Zugriffskontrolle</a>
+<ul class="sectlevel2">
+<li><a href="#_rolle_mannschaftsführer">8.1. Rolle: Mannschaftsführer</a></li>
+<li><a href="#_rolle_administrator">8.2. Rolle: Administrator</a></li>
+</ul>
+</li>
+<li><a href="#_annahmen_und_constraints">9. Annahmen und Constraints</a>
+<ul class="sectlevel2">
+<li><a href="#_annahmen">9.1. Annahmen</a></li>
+<li><a href="#_constraints">9.2. Constraints</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -467,57 +500,613 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="_ausgangssituation"><a class="anchor" href="#_ausgangssituation"></a>1. Ausgangssituation</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_organisationsübersicht"><a class="anchor" href="#_organisationsübersicht"></a>1.1. Organisationsübersicht</h3>
+<div class="paragraph">
+<p>Die Spielgemeinschaft Union Gutau-Pregarten ist ein Tischtennisverein in Oberösterreich mit etwa 50 aktiven Mitgliedern. Der Verein betreibt 9 Mannschaften, die an Ligameisterschaften in verschiedenen Leistungsklassen teilnehmen.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ligasystem_und_spielklassen"><a class="anchor" href="#_ligasystem_und_spielklassen"></a>1.2. Ligasystem und Spielklassen</h3>
+<div class="paragraph">
+<p>Die österreichische Tischtennisliga funktioniert nach einem Klassifizierungssystem:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Spielklassen</strong>: Mannschaften werden in Klassen eingeteilt (z.B. 1. Bundesliga, 2. Bundesliga, Landesliga, Bezirksliga, etc.)</p>
+</li>
+<li>
+<p><strong>Spielereignung</strong>: Ein Spieler ist einer oder mehreren Spielklassen zugeordnet und darf nur in diesen Klassen spielen</p>
+</li>
+<li>
+<p><strong>Wöchentliche Spiele</strong>: Durchschnittlich 9 Spiele pro Woche mit je 4 Spielern pro Team</p>
+</li>
+<li>
+<p><strong>Pro-Woche-Regel</strong>: Ein Spieler kann maximal ein Spiel pro Woche (Montag-Sonntag) bestreiten, es sei denn es ist ein gekennzeichnetes Ausnahmespiel</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_aktuelle_teamstruktur"><a class="anchor" href="#_aktuelle_teamstruktur"></a>1.3. Aktuelle Teamstruktur</h3>
+<div class="paragraph">
+<p>Jede Mannschaft hat einen designierten Mannschaftsführer, der folgende Aufgaben hat:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Spieler für kommende Spiele auswählen (unter Beachtung der Spielklasse)</p>
+</li>
+<li>
+<p>Ersatzspieler organisieren bei Ausfällen</p>
+</li>
+<li>
+<p>Kommunikation mit Spielern über Verfügbarkeit</p>
+</li>
+<li>
+<p>Spielberichte und Ergebnisse dokumentieren</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_istzustand"><a class="anchor" href="#_istzustand"></a>2. Istzustand</h2>
+<h2 id="_istzustand_aktueller_prozess"><a class="anchor" href="#_istzustand_aktueller_prozess"></a>2. Istzustand (Aktueller Prozess)</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_spielerauswahl_ablauf"><a class="anchor" href="#_spielerauswahl_ablauf"></a>2.1. Spielerauswahl-Ablauf</h3>
+<div class="paragraph">
+<p>Der Spielerauswahl-Prozess verläuft derzeit folgendermaßen:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Mannschaftsführer erhält Spielplan vom Verband</p>
+</li>
+<li>
+<p>Mannschaftsführer telefoniert/schreibt Spieler einzeln an: „Bist du Freitag um 19:30 verfügbar?"</p>
+</li>
+<li>
+<p>Spieler antworten per WhatsApp/Telefon mit Zusage oder Absage</p>
+</li>
+<li>
+<p>Bei Absagen: Mannschaftsführer kontaktiert weitere Spieler aus der Liste</p>
+</li>
+<li>
+<p>Endgültige Spielerbestätigung erfolgt manuell</p>
+</li>
+<li>
+<p>Koordination zwischen den Mannschaften erfolgt informell</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_problemstellung"><a class="anchor" href="#_problemstellung"></a>3. Problemstellung</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Das Kernproblem ist ein <strong>manuelles, fehleranfälliges Verwaltungssystem</strong>, das Zeit, Effizienz und Datenkonsistenz beeinträchtigt:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Zeitaufwand</strong>: Mannschaftsführer verwenden 30-60 Minuten pro Woche für Spielerkoordination (entspricht ~2-4 Stunden/Monat)</p>
+</li>
+<li>
+<p><strong>Keine zentralen Daten</strong>: Keine einheitliche Übersicht über Spielerverfügbarkeit und Spielklassen</p>
+</li>
+<li>
+<p><strong>Regelverstoße</strong>: Risiko, dass Spieler in zu hohen oder zu niedrigen Klassen eingeteilt werden → Ligaverstöße und mögliche Strafen</p>
+</li>
+<li>
+<p><strong>Doppelbuchungen</strong>: Mehrere Mannschaftsführer können denselben Spieler gleichzeitig anfragen (gleiche Spieler können versehentlich für das gleiche Zeitfenster von verschiedenen Teams eingeplant werden)</p>
+</li>
+<li>
+<p><strong>Unreliable Kommunikation</strong>: WhatsApp/Telefon ist fehleranfällig und nicht dokumentiert, unvollständige Kontaktdaten</p>
+</li>
+<li>
+<p><strong>Spielererfüllung</strong>: Teams haben oft nicht die volle Spieleranzahl → Spiele müssen abgesagt werden</p>
+</li>
+<li>
+<p><strong>Ersatzspieler-Notfall</strong>: Bei kurzfristigen Ausfällen keine Übersicht über verfügbare Spieler</p>
+</li>
+</ol>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_aufgabenstellung"><a class="anchor" href="#_aufgabenstellung"></a>4. Aufgabenstellung</h2>
+<h2 id="_aufgabenstellung_teamverwaltungs_portal"><a class="anchor" href="#_aufgabenstellung_teamverwaltungs_portal"></a>4. Aufgabenstellung: Teamverwaltungs-Portal</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_funktionale_anforderung"><a class="anchor" href="#_funktionale_anforderung"></a>4.1. Funktionale Anforderung</h3>
-
+<div class="paragraph">
+<p>Es soll ein <strong>zentrales Webportal</strong> entwickelt werden, das:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Mannschaftsführern einen schnellen Überblick über verfügbare Spieler ihrer Spielklasse für ein Spiel bietet</p>
+</li>
+<li>
+<p>Spieler-Kontaktdaten (Telefon) zentral speichert und schnell erreichbar macht</p>
+</li>
+<li>
+<p>Pro Spiel festhalten kann, welche Spieler nicht verfügbar sind (Verletzung, krank, etc.)</p>
+</li>
+<li>
+<p>Alle Daten digital dokumentiert und recherchierbar macht</p>
+</li>
+<li>
+<p>Admin die zentrale Verwaltung von Spielerstammdaten ermöglicht</p>
+</li>
+</ul>
 </div>
 <div class="sect2">
-<h3 id="_nicht_funktionale_anforderung"><a class="anchor" href="#_nicht_funktionale_anforderung"></a>4.2. Nicht funktionale Anforderung</h3>
-
+<h3 id="_funktionale_anforderungen"><a class="anchor" href="#_funktionale_anforderungen"></a>4.1. Funktionale Anforderungen</h3>
+<div class="sect3">
+<h4 id="_use_case_diagramm"><a class="anchor" href="#_use_case_diagramm"></a>4.1.1. Use-Case Diagramm</h4>
+<div class="imageblock">
+<div class="content">
+<img src="images/diag-plantuml-md5-b058d61f2d30d8d730977320719b6617.png" alt="Diagram" width="864" height="1086">
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fr_1_spielverwaltung_manuell"><a class="anchor" href="#_fr_1_spielverwaltung_manuell"></a>4.1.2. FR 1: Spielverwaltung - Manuell</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Mannschaftsführer kann Spiele manuell erstellen mit: Gegner, Ort (Adresse), Datum, Uhrzeit, Spielklasse, erforderliche Spieleranzahl (4)</p>
+</li>
+<li>
+<p>Optional: Checkbox "Ausnahmespiel" mit Beschreibung (ermöglicht Spieler zweites Spiel in der Woche)</p>
+</li>
+<li>
+<p>Spiele können bearbeitet werden (Gegner/Ort/Uhrzeit/Spielklasse ändern)</p>
+</li>
+<li>
+<p>Spiele können gelöscht werden</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fr_2_spielplan_import"><a class="anchor" href="#_fr_2_spielplan_import"></a>4.1.3. FR 2: Spielplan-Import</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Admin kann CSV-Dateien mit Spielplänen importieren: Mannschaft, Gegner, Ort (Adresse), Datum, Uhrzeit</p>
+</li>
+<li>
+<p>Spielklasse wird automatisch aus der Mannschaft übernommen</p>
+</li>
+<li>
+<p>Checkbox für "Ausnahmespiel" kann optional in CSV angegeben werden</p>
+</li>
+<li>
+<p>Bei Import werden automatisch neue Spiele erstellt</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fr_3_spieler_stammdaten_management"><a class="anchor" href="#_fr_3_spieler_stammdaten_management"></a>4.1.4. FR 3: Spieler-Stammdaten Management</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Admin importiert CSV-Datei mit Spielern: Name, Telefon, Spielklassen (mehrere möglich, komma-separiert)</p>
+</li>
+<li>
+<p>Admin kann Spieler hinzufügen/bearbeiten</p>
+</li>
+<li>
+<p>Jeder Spieler kann mehreren Spielklassen zugeordnet sein</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fr_4_spieler_übersicht_für_mannschaftsführer"><a class="anchor" href="#_fr_4_spieler_übersicht_für_mannschaftsführer"></a>4.1.5. FR 4: Spieler-Übersicht für Mannschaftsführer</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Mannschaftsführer sieht Dashboard mit seinen Spielen seiner Mannschaft</p>
+</li>
+<li>
+<p>Für jedes Spiel werden nur Spieler angezeigt, die in der Spielklasse des Spiels spielberechtigt sind</p>
+</li>
+<li>
+<p>Neben jedem Spieler: Name, Telefon, Status (verfügbar/nicht verfügbar für dieses Spiel)</p>
+</li>
+<li>
+<p>System zeigt an: Spieler hat bereits ein Spiel diese Woche (außer wenn Ausnahmespiel gekennzeichnet ist)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fr_5_spieler_verfügbarkeit_pro_spiel"><a class="anchor" href="#_fr_5_spieler_verfügbarkeit_pro_spiel"></a>4.1.6. FR 5: Spieler-Verfügbarkeit pro Spiel</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Standardmäßig sind alle Spieler verfügbar</p>
+</li>
+<li>
+<p>Mannschaftsführer kann einen Spieler für ein konkretes Spiel als "nicht verfügbar" markieren</p>
+</li>
+<li>
+<p>Grund muss angegeben werden (Freitextfeld): z.B. "Verletzt", "Krank", "Schon angefragt"</p>
+</li>
+<li>
+<p>Status wird pro Spiel gespeichert und kann wieder rückgängig gemacht werden</p>
+</li>
+<li>
+<p>Nach dem Spieldatum wird die Ungültig-Markierung automatisch gelöscht</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nicht_funktionale_anforderungen"><a class="anchor" href="#_nicht_funktionale_anforderungen"></a>4.2. Nicht-funktionale Anforderungen</h3>
+<div class="sect3">
+<h4 id="_benutzeroberfläche"><a class="anchor" href="#_benutzeroberfläche"></a>4.2.1. Benutzeroberfläche</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Moderne, intuitive Weboberfläche</p>
+</li>
+<li>
+<p>Responsive Design für Desktop, Tablet, Smartphone (Mobile-First Ansatz)</p>
+</li>
+<li>
+<p>Barrierefreiheit: WCAG 2.1 Level AA</p>
+</li>
+<li>
+<p>Maximale Ladezeit: 3 Sekunden</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_performance_skalierbarkeit"><a class="anchor" href="#_performance_skalierbarkeit"></a>4.2.2. Performance &amp; Skalierbarkeit</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>System muss 50+ gleichzeitige Benutzer unterstützen</p>
+</li>
+<li>
+<p>Datenbankzugriffe: max. 500ms pro Request</p>
+</li>
+<li>
+<p>Verfügbarkeit: 99.5% Uptime (wartungsarbeiten ausgenommen)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sicherheit"><a class="anchor" href="#_sicherheit"></a>4.2.3. Sicherheit</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Authentifizierung: Benutzerlogin (E-Mail + Passwort)</p>
+</li>
+<li>
+<p>Autorisierung: Mannschaftsführer sehen nur ihre Teams; Admin hat Vollzugriff</p>
+</li>
+<li>
+<p>HTTPS-verschlüsselte Kommunikation</p>
+</li>
+<li>
+<p>Datenschutz: Spieler-Kontaktdaten nur für berechtigte Mannschaftsführer sichtbar</p>
+</li>
+<li>
+<p>Datensicherung: Tägliche Backups, Wiederherstellung innerhalb 1 Stunde</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_browser_kompatibilität"><a class="anchor" href="#_browser_kompatibilität"></a>4.2.4. Browser-Kompatibilität</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Chrome (letzte 2 Versionen)</p>
+</li>
+<li>
+<p>Firefox (letzte 2 Versionen)</p>
+</li>
+<li>
+<p>Safari (letzte 2 Versionen)</p>
+</li>
+<li>
+<p>Edge (letzte 2 Versionen)</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_ziele"><a class="anchor" href="#_ziele"></a>5. Ziele</h2>
 <div class="sectionbody">
-
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 75%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Ziel</th>
+<th class="tableblock halign-left valign-top">Messkriterium</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zeitersparnis</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Mannschaftsführer sparen min. 50% Zeit bei Spielerkoordination (von 45 min/Woche auf 20 min/Woche)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Verbesserte Datenkonsistenz</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0 Doppelbuchungen, 0 Regelverstoße durch falsche Spielklassen-Zuordnung</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Höhere Spielererfüllung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Teams erreichen 95%+ Spielerquote (alle geplanten Spiele sind besetzt)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Bessere Ligaleistungen</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Durch optimierte Spielerzuordnung und weniger Ausfälle sollen Teams bessere Ergebnisse erzielen (Leistungsverbesserung um 10-15%)</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_mengengerüst"><a class="anchor" href="#_mengengerüst"></a>6. Mengengerüst</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_datenvolumen"><a class="anchor" href="#_datenvolumen"></a>6.1. Datenvolumen</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Spieler</strong>: 50 aktive Spieler + 20% Reserve = 60 Spieler im System</p>
+</li>
+<li>
+<p><strong>Mannschaften</strong>: 9 Teams</p>
+</li>
+<li>
+<p><strong>Wöchentliche Spiele</strong>: 9 Spiele/Woche × 52 Wochen = 468 Spiele/Jahr</p>
+</li>
+<li>
+<p><strong>Spieler-Zuordnungen</strong>: ~36 Einträge/Woche (9 Spiele × 4 Spieler) = ~1.872 Einträge/Jahr</p>
+</li>
+<li>
+<p><strong>Historische Daten</strong>: Mindestens 2 Jahre archivieren</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_peak_loads"><a class="anchor" href="#_peak_loads"></a>6.2. Peak-Loads</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Peak-Zeit</strong>: Dienstags/Mittwochs 18:00-20:00 Uhr (Spielerauswahl vor Wochenendspiele)</p>
+</li>
+<li>
+<p><strong>Max. gleichzeitige Benutzer</strong>: 10 (9 Mannschaftsführer + Admin)</p>
+</li>
+<li>
+<p><strong>Datenspeicher</strong>: ~500 MB für komplettes System (2 Jahre Historie)</p>
+</li>
+</ul>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_rahmenbedingungen"><a class="anchor" href="#_rahmenbedingungen"></a>7. Rahmenbedingungen</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_technologie_stack"><a class="anchor" href="#_technologie_stack"></a>7.1. Technologie-Stack</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 60%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Komponente</th>
+<th class="tableblock halign-left valign-top">Technologie</th>
+<th class="tableblock halign-left valign-top">Begründung</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Frontend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Angular 16+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modernes Framework, reaktive UI, TypeScript-Support, große Community</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Backend</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Optimiert für Cloud/Container, schnelle Startup-Zeit, ideal für REST-APIs</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Datenbank</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL 18</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Robustes RDBMS, gute Performance, JSON-Support, beliebig skalierbar</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Container</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Docker + Docker Compose</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Einfache lokale Entwicklung und Deployment</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Authentifizierung</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">JWT-Token (Backend) + Session-Storage (Frontend)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stateless, skalierbar, standardisiert</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_deployment_hosting"><a class="anchor" href="#_deployment_hosting"></a>7.2. Deployment &amp; Hosting</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Entwicklung</strong>: Lokal mit Docker Compose (alle Komponenten in Containern)</p>
+</li>
+<li>
+<p><strong>Produktion</strong>: Zu definieren (Self-Hosted, Cloud-Provider wird später festgelegt)</p>
+</li>
+<li>
+<p><strong>Monitoring</strong>: Basis-Health-Checks und Error-Logging</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_kosten"><a class="anchor" href="#_kosten"></a>7.3. Kosten</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Entwicklungskosten</strong>: Siehe separates Kostenbudget-Dokument</p>
+</li>
+<li>
+<p><strong>Betriebskosten</strong>: Ziel: €0</p>
+</li>
+<li>
+<p><strong>Lizenzen</strong>: Open-Source Stack → keine Lizenzkosten</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_benutzerrollen_und_zugriffskontrolle"><a class="anchor" href="#_benutzerrollen_und_zugriffskontrolle"></a>8. Benutzerrollen und Zugriffskontrolle</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_rolle_mannschaftsführer"><a class="anchor" href="#_rolle_mannschaftsführer"></a>8.1. Rolle: Mannschaftsführer</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Zugriff</strong>:</p>
+</li>
+<li>
+<p>Dashboard mit seinen Spielen seiner Mannschaft</p>
+</li>
+<li>
+<p>Spiele erstellen/bearbeiten/löschen</p>
+</li>
+<li>
+<p>Spieler-Liste mit Kontaktdaten (gefiltert nach Spielklasse des Spiels)</p>
+</li>
+<li>
+<p>Spieler pro Spiel als "nicht verfügbar" markieren mit Grund</p>
+</li>
+<li>
+<p><strong>Beschränkung</strong>: Sieht nur die Spieler, die in den Spielklassen seiner Mannschaft spielberechtigt sind. Sieht nur seine Mannschaft und deren Spiele.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rolle_administrator"><a class="anchor" href="#_rolle_administrator"></a>8.2. Rolle: Administrator</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Zugriff</strong>:</p>
+</li>
+<li>
+<p>Spieler-Stammdaten verwalten (hinzufügen/bearbeiten/löschen)</p>
+</li>
+<li>
+<p>CSV-Import für Spieler durchführen</p>
+</li>
+<li>
+<p>Alle Mannschaften und Spiele einsehen</p>
+</li>
+<li>
+<p>Benutzer-Verwaltung (Mannschaftsführer anlegen/bearbeiten)</p>
+</li>
+<li>
+<p><strong>Aufgaben</strong>: Datenverwaltung, System-Konfiguration, Stammdaten-Pflege</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_annahmen_und_constraints"><a class="anchor" href="#_annahmen_und_constraints"></a>9. Annahmen und Constraints</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_annahmen"><a class="anchor" href="#_annahmen"></a>9.1. Annahmen</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Spieler-Stammdaten im CSV sind aktuell und vollständig</p>
+</li>
+<li>
+<p>Internet-Zugang ist für Mannschaftsführer verfügbar</p>
+</li>
+<li>
+<p>Spiele werden min. 7 Tage im Voraus geplant</p>
+</li>
+<li>
+<p>CSV-Dateien werden regelmäßig aktualisiert vom Admin</p>
+</li>
+<li>
+<p>Mannschaftsführer sind eindeutig ihrer Mannschaft zugeordnet</p>
+</li>
+<li>
+<p>Ein Mannschaftsführer verwaltet nur eine Mannschaft</p>
+</li>
+<li>
+<p>CSV-Spielplan enthält gültige Mannschaftsnamen aus dem System</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_constraints"><a class="anchor" href="#_constraints"></a>9.2. Constraints</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Keine Benachrichtigungen an Spieler notwendig (rein für interne Verwaltung)</p>
+</li>
+<li>
+<p>Spieler haben keinen Zugriff auf die Weboberfläche</p>
+</li>
+<li>
+<p>System ist nur für Vereinsinterne Nutzung</p>
+</li>
+<li>
+<p>Keine automatischen Zuordnungen; Mannschaftsführer entscheidet selbst wer angefragt wird</p>
+</li>
+<li>
+<p><strong>Pro-Woche-Regel</strong>: Spieler können maximal ein Spiel pro Woche spielen (Montag-Sonntag), Ausnahmespiele sind gekennzeichnet</p>
+</li>
+<li>
+<p>RC-Punkte werden nicht betrachtet; nur Spielklassen-Zugehörigkeit</p>
+</li>
+</ol>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 1.0.0<br>
-Last updated 2026-05-04 10:31:10 UTC
+Last updated 2026-05-20 19:44:37 UTC
 </div>
 </div>
 </body>
