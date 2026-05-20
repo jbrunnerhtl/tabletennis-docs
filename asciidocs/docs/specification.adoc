@@ -1,30 +1,303 @@
-= Übersicht
-Jan Brunner
-1.0.0, {docdate}: Spezifikation
+= Pflichtenheft - Teamverwaltung
+:author: Jan Brunner
+:revnumber: 1.0.0
+:revdate: {docdate}
+:revremark: Spezifikation
 :icons: font
 :experimental:
 :sectnums:
 :source-highlighter: rouge
 :docinfo: shared
-:toc:
+:toc: left
+:toclevels: 3
 
 
 
 == Ausgangssituation
 
-== Istzustand
+=== Organisationsübersicht
+
+Die Spielgemeinschaft Union Gutau-Pregarten ist ein Tischtennisverein in Oberösterreich mit etwa 50 aktiven Mitgliedern. Der Verein betreibt 9 Mannschaften, die an Ligameisterschaften in verschiedenen Leistungsklassen teilnehmen.
+
+=== Ligasystem und Spielklassen
+
+Die österreichische Tischtennisliga funktioniert nach einem Klassifizierungssystem:
+
+* *Spielklassen*: Mannschaften werden in Klassen eingeteilt (z.B. 1. Bundesliga, 2. Bundesliga, Landesliga, Bezirksliga, etc.)
+* *Spielereignung*: Ein Spieler ist einer oder mehreren Spielklassen zugeordnet und darf nur in diesen Klassen spielen
+* *Wöchentliche Spiele*: Durchschnittlich 9 Spiele pro Woche mit je 4 Spielern pro Team
+* *Pro-Woche-Regel*: Ein Spieler kann maximal ein Spiel pro Woche (Montag-Sonntag) bestreiten, es sei denn es ist ein gekennzeichnetes Ausnahmespiel
+
+=== Aktuelle Teamstruktur
+
+Jede Mannschaft hat einen designierten Mannschaftsführer, der folgende Aufgaben hat:
+
+* Spieler für kommende Spiele auswählen (unter Beachtung der Spielklasse)
+* Ersatzspieler organisieren bei Ausfällen
+* Kommunikation mit Spielern über Verfügbarkeit
+* Spielberichte und Ergebnisse dokumentieren
+
+== Istzustand (Aktueller Prozess)
+
+=== Spielerauswahl-Ablauf
+
+Der Spielerauswahl-Prozess verläuft derzeit folgendermaßen:
+
+. Mannschaftsführer erhält Spielplan vom Verband
+. Mannschaftsführer telefoniert/schreibt Spieler einzeln an: „Bist du Freitag um 19:30 verfügbar?"
+. Spieler antworten per WhatsApp/Telefon mit Zusage oder Absage
+. Bei Absagen: Mannschaftsführer kontaktiert weitere Spieler aus der Liste
+. Endgültige Spielerbestätigung erfolgt manuell
+. Koordination zwischen den Mannschaften erfolgt informell
+
 
 == Problemstellung
 
-== Aufgabenstellung
+Das Kernproblem ist ein **manuelles, fehleranfälliges Verwaltungssystem**, das Zeit, Effizienz und Datenkonsistenz beeinträchtigt:
 
-=== Funktionale Anforderung
+. *Zeitaufwand*: Mannschaftsführer verwenden 30-60 Minuten pro Woche für Spielerkoordination (entspricht ~2-4 Stunden/Monat)
+. *Keine zentralen Daten*: Keine einheitliche Übersicht über Spielerverfügbarkeit und Spielklassen
+. *Regelverstoße*: Risiko, dass Spieler in zu hohen oder zu niedrigen Klassen eingeteilt werden → Ligaverstöße und mögliche Strafen
+. *Doppelbuchungen*: Mehrere Mannschaftsführer können denselben Spieler gleichzeitig anfragen (gleiche Spieler können versehentlich für das gleiche Zeitfenster von verschiedenen Teams eingeplant werden)
+. *Unreliable Kommunikation*: WhatsApp/Telefon ist fehleranfällig und nicht dokumentiert, unvollständige Kontaktdaten
+. *Spielererfüllung*: Teams haben oft nicht die volle Spieleranzahl → Spiele müssen abgesagt werden
+. *Ersatzspieler-Notfall*: Bei kurzfristigen Ausfällen keine Übersicht über verfügbare Spieler
 
-=== Nicht funktionale Anforderung
+== Aufgabenstellung: Teamverwaltungs-Portal
 
+Es soll ein **zentrales Webportal** entwickelt werden, das:
+
+* Mannschaftsführern einen schnellen Überblick über verfügbare Spieler ihrer Spielklasse für ein Spiel bietet
+* Spieler-Kontaktdaten (Telefon) zentral speichert und schnell erreichbar macht
+* Pro Spiel festhalten kann, welche Spieler nicht verfügbar sind (Verletzung, krank, etc.)
+* Alle Daten digital dokumentiert und recherchierbar macht
+* Admin die zentrale Verwaltung von Spielerstammdaten ermöglicht
+
+=== Funktionale Anforderungen
+
+==== Use-Case Diagramm
+
+[plantuml]
+....
+@startuml
+!theme plain
+left to right direction
+skinparam backgroundColor #FEFEFE
+skinparam ActorStyle awesome
+
+actor "Mannschaftsführer" as MF
+actor "Admin" as Admin
+
+rectangle "Teamverwaltungs-Portal" {
+  usecase "Spiele anzeigen" as UC1
+  usecase "Spiel erstellen" as UC2
+  usecase "Spiel bearbeiten" as UC3
+  usecase "Spiel löschen" as UC4
+  
+  usecase "Spieler anzeigen\n(gefiltert nach Klasse)" as UC5
+  usecase "Spieler zu Spiel\nhinzufügen" as UC5b
+  usecase "Spieler als nicht verfügbar\nmarkieren" as UC6
+  usecase "Verfügbarkeitsstatus\nwiederherstellen" as UC7
+  
+  usecase "Spielplan-CSV\nimportieren" as UC8
+  usecase "Spieler-CSV\nimportieren" as UC9
+  usecase "Spieler verwalten\n(CRUD)" as UC10
+  usecase "Mannschaftsführer\nverwalten" as UC11
+  usecase "Systemübersicht\nanzeigen" as UC12
+}
+
+MF --> UC1
+MF --> UC2
+MF --> UC3
+MF --> UC4
+MF --> UC5
+MF --> UC5b
+MF --> UC6
+MF --> UC7
+
+Admin --> UC8
+Admin --> UC9
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+
+UC2 --|> UC1 : "erstellt"
+UC3 --|> UC1 : "modifiziert"
+UC4 --|> UC1 : "löscht"
+UC5b --|> UC5 : "verwendet"
+UC6 --|> UC5 : "ändert Status"
+UC7 --|> UC5 : "ändert Status"
+
+@enduml
+....
+
+==== FR 1: Spielverwaltung - Manuell
+* Mannschaftsführer kann Spiele manuell erstellen mit: Gegner, Ort (Adresse), Datum, Uhrzeit, Spielklasse, erforderliche Spieleranzahl (4)
+* Optional: Checkbox "Ausnahmespiel" mit Beschreibung (ermöglicht Spieler zweites Spiel in der Woche)
+* Spiele können bearbeitet werden (Gegner/Ort/Uhrzeit/Spielklasse ändern)
+* Spiele können gelöscht werden
+
+==== FR 2: Spielplan-Import
+* Admin kann CSV-Dateien mit Spielplänen importieren: Mannschaft, Gegner, Ort (Adresse), Datum, Uhrzeit
+* Spielklasse wird automatisch aus der Mannschaft übernommen
+* Checkbox für "Ausnahmespiel" kann optional in CSV angegeben werden
+* Bei Import werden automatisch neue Spiele erstellt
+
+==== FR 3: Spieler-Stammdaten Management
+* Admin importiert CSV-Datei mit Spielern: Name, Telefon, Spielklassen (mehrere möglich, komma-separiert)
+* Admin kann Spieler hinzufügen/bearbeiten
+* Jeder Spieler kann mehreren Spielklassen zugeordnet sein
+
+==== FR 4: Spieler-Übersicht für Mannschaftsführer
+* Mannschaftsführer sieht Dashboard mit seinen Spielen seiner Mannschaft
+* Für jedes Spiel werden nur Spieler angezeigt, die in der Spielklasse des Spiels spielberechtigt sind
+* Neben jedem Spieler: Name, Telefon, Status (verfügbar/nicht verfügbar für dieses Spiel)
+* System zeigt an: Spieler hat bereits ein Spiel diese Woche (außer wenn Ausnahmespiel gekennzeichnet ist)
+
+==== FR 5: Spieler-Verfügbarkeit pro Spiel
+* Standardmäßig sind alle Spieler verfügbar
+* Mannschaftsführer kann einen Spieler für ein konkretes Spiel als "nicht verfügbar" markieren
+* Grund muss angegeben werden (Freitextfeld): z.B. "Verletzt", "Krank", "Schon angefragt"
+* Status wird pro Spiel gespeichert und kann wieder rückgängig gemacht werden
+* Nach dem Spieldatum wird die Ungültig-Markierung automatisch gelöscht
+
+=== Nicht-funktionale Anforderungen
+
+==== Benutzeroberfläche
+* Moderne, intuitive Weboberfläche
+* Responsive Design für Desktop, Tablet, Smartphone (Mobile-First Ansatz)
+* Barrierefreiheit: WCAG 2.1 Level AA
+* Maximale Ladezeit: 3 Sekunden
+
+==== Performance & Skalierbarkeit
+* System muss 50+ gleichzeitige Benutzer unterstützen
+* Datenbankzugriffe: max. 500ms pro Request
+* Verfügbarkeit: 99.5% Uptime (wartungsarbeiten ausgenommen)
+
+==== Sicherheit
+* Authentifizierung: Benutzerlogin (E-Mail + Passwort)
+* Autorisierung: Mannschaftsführer sehen nur ihre Teams; Admin hat Vollzugriff
+* HTTPS-verschlüsselte Kommunikation
+* Datenschutz: Spieler-Kontaktdaten nur für berechtigte Mannschaftsführer sichtbar
+* Datensicherung: Tägliche Backups, Wiederherstellung innerhalb 1 Stunde
+
+==== Browser-Kompatibilität
+* Chrome (letzte 2 Versionen)
+* Firefox (letzte 2 Versionen)
+* Safari (letzte 2 Versionen)
+* Edge (letzte 2 Versionen)
 
 == Ziele
 
+[cols="1,3"]
+|===
+| Ziel | Messkriterium
+
+| Zeitersparnis
+| Mannschaftsführer sparen min. 50% Zeit bei Spielerkoordination (von 45 min/Woche auf 20 min/Woche)
+
+| Verbesserte Datenkonsistenz
+| 0 Doppelbuchungen, 0 Regelverstoße durch falsche Spielklassen-Zuordnung
+
+| Höhere Spielererfüllung
+| Teams erreichen 95%+ Spielerquote (alle geplanten Spiele sind besetzt)
+
+
+| Bessere Ligaleistungen
+| Durch optimierte Spielerzuordnung und weniger Ausfälle sollen Teams bessere Ergebnisse erzielen (Leistungsverbesserung um 10-15%)
+
+|===
+
 == Mengengerüst
 
+=== Datenvolumen
+* **Spieler**: 50 aktive Spieler + 20% Reserve = 60 Spieler im System
+* **Mannschaften**: 9 Teams
+* **Wöchentliche Spiele**: 9 Spiele/Woche × 52 Wochen = 468 Spiele/Jahr
+* **Spieler-Zuordnungen**: ~36 Einträge/Woche (9 Spiele × 4 Spieler) = ~1.872 Einträge/Jahr
+* **Historische Daten**: Mindestens 2 Jahre archivieren
+
+=== Peak-Loads
+* **Peak-Zeit**: Dienstags/Mittwochs 18:00-20:00 Uhr (Spielerauswahl vor Wochenendspiele)
+* **Max. gleichzeitige Benutzer**: 10 (9 Mannschaftsführer + Admin)
+* **Datenspeicher**: ~500 MB für komplettes System (2 Jahre Historie)
+
 == Rahmenbedingungen
+
+=== Technologie-Stack
+
+[cols="1,1,3"]
+|===
+| Komponente | Technologie | Begründung
+
+| Frontend
+| Angular 16+
+| Modernes Framework, reaktive UI, TypeScript-Support, große Community
+
+| Backend
+| Quarkus
+| Optimiert für Cloud/Container, schnelle Startup-Zeit, ideal für REST-APIs
+
+| Datenbank
+| PostgreSQL 18
+| Robustes RDBMS, gute Performance, JSON-Support, beliebig skalierbar
+
+| Container
+| Docker + Docker Compose
+| Einfache lokale Entwicklung und Deployment
+
+| Authentifizierung
+| JWT-Token (Backend) + Session-Storage (Frontend)
+| Stateless, skalierbar, standardisiert
+
+|===
+
+=== Deployment & Hosting
+
+* **Entwicklung**: Lokal mit Docker Compose (alle Komponenten in Containern)
+* **Produktion**: Zu definieren (Self-Hosted, Cloud-Provider wird später festgelegt)
+* **Monitoring**: Basis-Health-Checks und Error-Logging
+
+=== Kosten
+
+* **Entwicklungskosten**: Siehe separates Kostenbudget-Dokument
+* **Betriebskosten**: Ziel: €0
+* **Lizenzen**: Open-Source Stack → keine Lizenzkosten
+
+
+== Benutzerrollen und Zugriffskontrolle
+
+=== Rolle: Mannschaftsführer
+* **Zugriff**: 
+  * Dashboard mit seinen Spielen seiner Mannschaft
+  * Spiele erstellen/bearbeiten/löschen
+  * Spieler-Liste mit Kontaktdaten (gefiltert nach Spielklasse des Spiels)
+  * Spieler pro Spiel als "nicht verfügbar" markieren mit Grund
+* **Beschränkung**: Sieht nur die Spieler, die in den Spielklassen seiner Mannschaft spielberechtigt sind. Sieht nur seine Mannschaft und deren Spiele.
+
+=== Rolle: Administrator
+* **Zugriff**: 
+  * Spieler-Stammdaten verwalten (hinzufügen/bearbeiten/löschen)
+  * CSV-Import für Spieler durchführen
+  * Alle Mannschaften und Spiele einsehen
+  * Benutzer-Verwaltung (Mannschaftsführer anlegen/bearbeiten)
+* **Aufgaben**: Datenverwaltung, System-Konfiguration, Stammdaten-Pflege
+
+== Annahmen und Constraints
+
+=== Annahmen
+. Spieler-Stammdaten im CSV sind aktuell und vollständig
+. Internet-Zugang ist für Mannschaftsführer verfügbar
+. Spiele werden min. 7 Tage im Voraus geplant
+. CSV-Dateien werden regelmäßig aktualisiert vom Admin
+. Mannschaftsführer sind eindeutig ihrer Mannschaft zugeordnet
+. Ein Mannschaftsführer verwaltet nur eine Mannschaft
+. CSV-Spielplan enthält gültige Mannschaftsnamen aus dem System
+
+=== Constraints
+. Keine Benachrichtigungen an Spieler notwendig (rein für interne Verwaltung)
+. Spieler haben keinen Zugriff auf die Weboberfläche
+. System ist nur für Vereinsinterne Nutzung
+. Keine automatischen Zuordnungen; Mannschaftsführer entscheidet selbst wer angefragt wird
+. **Pro-Woche-Regel**: Spieler können maximal ein Spiel pro Woche spielen (Montag-Sonntag), Ausnahmespiele sind gekennzeichnet
+. RC-Punkte werden nicht betrachtet; nur Spielklassen-Zugehörigkeit
