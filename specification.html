@@ -441,8 +441,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Pflichtenheft - Teamverwaltung</h1>
 <div class="details">
 <span id="author" class="author">Jan Brunner</span><br>
-<span id="revnumber">version 1.0.0,</span>
-<span id="revdate">2026-05-20</span>
+<span id="revnumber">version 1.3.0,</span>
+<span id="revdate">2026-10-09</span>
 <br><span id="revremark">Spezifikation</span>
 </div>
 <div id="toc" class="toc2">
@@ -503,7 +503,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect2">
 <h3 id="_organisationsübersicht"><a class="anchor" href="#_organisationsübersicht"></a>1.1. Organisationsübersicht</h3>
 <div class="paragraph">
-<p>Die Spielgemeinschaft Union Gutau-Pregarten ist ein Tischtennisverein in Oberösterreich mit etwa 50 aktiven Mitgliedern. Der Verein betreibt 9 Mannschaften, die an Ligameisterschaften in verschiedenen Leistungsklassen teilnehmen.</p>
+<p>Die Spielgemeinschaft Union Gutau-Pregarten ist ein Tischtennisverein in Oberösterreich mit etwa 60 aktiven Spielern. Der Verein betreibt 10 Mannschaften, die an Ligameisterschaften in verschiedenen Leistungsklassen teilnehmen.</p>
 </div>
 </div>
 <div class="sect2">
@@ -520,7 +520,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><strong>Spielereignung</strong>: Ein Spieler ist einer oder mehreren Spielklassen zugeordnet und darf nur in diesen Klassen spielen</p>
 </li>
 <li>
-<p><strong>Wöchentliche Spiele</strong>: Durchschnittlich 9 Spiele pro Woche mit je 4 Spielern pro Team</p>
+<p><strong>Wöchentliche Spiele</strong>: In Spielwochen bis zu 10 Spiele (eines je Mannschaft) mit je 4 Spielern pro Team</p>
+</li>
+<li>
+<p><strong>Spielplan</strong>: Der Verband (OÖTTV) veröffentlicht alle Spieltermine, Gegner und Spielorte im XTTV-Ergebnisdienst (<a href="https://oettv.xttv.at/ed/index.php?oid=191" class="bare">https://oettv.xttv.at/ed/index.php?oid=191</a>)</p>
 </li>
 <li>
 <p><strong>Pro-Woche-Regel</strong>: Ein Spieler kann maximal ein Spiel pro Woche (Montag-Sonntag) bestreiten, es sei denn es ist ein gekennzeichnetes Ausnahmespiel</p>
@@ -563,7 +566,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Mannschaftsführer erhält Spielplan vom Verband</p>
+<p>Mannschaftsführer sucht die Spieltermine seiner Mannschaft im XTTV-Ergebnisdienst des OÖTTV heraus</p>
 </li>
 <li>
 <p>Mannschaftsführer telefoniert/schreibt Spieler einzeln an: „Bist du Freitag um 19:30 verfügbar?"</p>
@@ -614,6 +617,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li>
 <p><strong>Ersatzspieler-Notfall</strong>: Bei kurzfristigen Ausfällen keine Übersicht über verfügbare Spieler</p>
 </li>
+<li>
+<p><strong>Doppelte Datenpflege</strong>: Spieltermine und Spielorte stehen bereits im XTTV-Ergebnisdienst und müssten für eine eigene Übersicht händisch übertragen werden; Terminverlegungen werden leicht übersehen</p>
+</li>
 </ol>
 </div>
 </div>
@@ -626,6 +632,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p>Spieltermine, Gegner und Spielorte aller Mannschaften automatisch aus dem XTTV-Ergebnisdienst des OÖTTV übernimmt, sodass Spiele nicht händisch eingetragen werden müssen</p>
+</li>
 <li>
 <p>Mannschaftsführern einen schnellen Überblick über verfügbare Spieler ihrer Spielklasse für ein Spiel bietet</p>
 </li>
@@ -649,60 +658,97 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h4 id="_use_case_diagramm"><a class="anchor" href="#_use_case_diagramm"></a>4.1.1. Use-Case Diagramm</h4>
 <div class="imageblock">
 <div class="content">
-<img src="images/diag-plantuml-md5-b058d61f2d30d8d730977320719b6617.png" alt="Diagram" width="864" height="1086">
+<img src="images/diag-plantuml-md5-17d770dd21fbf170c3e3867a662f3bef.png" alt="Diagram" width="881" height="1556">
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fr_1_spielverwaltung_manuell"><a class="anchor" href="#_fr_1_spielverwaltung_manuell"></a>4.1.2. FR 1: Spielverwaltung - Manuell</h4>
+<h4 id="_fr_1_automatischer_spielplan_abgleich_mit_xttv"><a class="anchor" href="#_fr_1_automatischer_spielplan_abgleich_mit_xttv"></a>4.1.2. FR 1: Automatischer Spielplan-Abgleich mit XTTV</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Mannschaftsführer kann Spiele manuell erstellen mit: Gegner, Ort (Adresse), Datum, Uhrzeit, Spielklasse, erforderliche Spieleranzahl (4)</p>
+<p>Das System übernimmt die Meisterschaftsspiele aller Mannschaften automatisch aus dem XTTV-Ergebnisdienst des OÖTTV; Spiele müssen nicht händisch eingetragen werden</p>
 </li>
 <li>
-<p>Optional: Checkbox "Ausnahmespiel" mit Beschreibung (ermöglicht Spieler zweites Spiel in der Woche)</p>
+<p>Es werden ausschließlich Meisterschaftsspiele abgeglichen; Cup-Spiele werden nicht übernommen</p>
 </li>
 <li>
-<p>Spiele können bearbeitet werden (Gegner/Ort/Uhrzeit/Spielklasse ändern)</p>
+<p>Datenquelle ist der öffentliche Terminexport von XTTV für den gesamten Verein (Vereinskürzel <code>SGGP</code>):<br>
+<code>https://oettv.xttv.at/public/ics_termine.php?vabkzg=SGGP&amp;export=csv</code></p>
 </li>
 <li>
-<p>Spiele können gelöscht werden</p>
+<p>Übernommen werden pro Spiel: Heim- und Gastmannschaft, Liga, Durchgang und Runde, Spieltermin (Datum und Uhrzeit), Spielort (Hallenname, Straße, PLZ, Ort) sowie die XTTV-Spiel-ID (<code>meid</code>)</p>
+</li>
+<li>
+<p>Die Zuordnung zur Mannschaft im Portal erfolgt über Vereinskürzel und Teamnummer (z.B. <code>SGGP</code> + <code>3</code>); die Spielklasse wird aus der Mannschaft übernommen</p>
+</li>
+<li>
+<p>Der Abgleich läuft automatisch einmal täglich und kann vom Admin zusätzlich manuell gestartet werden</p>
+</li>
+<li>
+<p>Spiele werden anhand der XTTV-Spiel-ID wiedererkannt: neue Spiele werden angelegt, geänderte Termine oder Spielorte (Verlegung, Platztausch) werden aktualisiert und für den Mannschaftsführer als geändert gekennzeichnet</p>
+</li>
+<li>
+<p>Spiele, die in XTTV nicht mehr vorhanden sind, werden nicht automatisch gelöscht, sondern als "in XTTV entfernt" markiert</p>
+</li>
+<li>
+<p>Im Portal erfasste Daten (Spielerzuordnung, Verfügbarkeiten, Ausnahmespiel-Kennzeichen) bleiben beim Abgleich erhalten</p>
+</li>
+<li>
+<p>Vereinsinterne Spiele (zwei eigene Mannschaften in derselben Liga) erscheinen bei beiden Mannschaften</p>
+</li>
+<li>
+<p>Ist XTTV nicht erreichbar, bleibt der letzte Datenstand bestehen; der Admin sieht Zeitpunkt und Ergebnis des letzten Abgleichs</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fr_2_spielplan_import"><a class="anchor" href="#_fr_2_spielplan_import"></a>4.1.3. FR 2: Spielplan-Import</h4>
+<h4 id="_fr_2_spielverwaltung_manuell"><a class="anchor" href="#_fr_2_spielverwaltung_manuell"></a>4.1.3. FR 2: Spielverwaltung - Manuell</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Admin kann CSV-Dateien mit Spielplänen importieren: Mannschaft, Gegner, Ort (Adresse), Datum, Uhrzeit</p>
+<p>Mannschaftsführer kann zusätzliche Spiele, die nicht in XTTV stehen (z.B. Freundschaftsspiele), manuell erstellen mit: Gegner, Ort (Adresse), Datum, Uhrzeit, Spielklasse; die Spieleranzahl beträgt immer 4</p>
 </li>
 <li>
-<p>Spielklasse wird automatisch aus der Mannschaft übernommen</p>
+<p>Optional: Checkbox "Ausnahmespiel" mit Beschreibung (ermöglicht Spieler zweites Spiel in der Woche); kann auch bei aus XTTV übernommenen Spielen gesetzt werden</p>
 </li>
 <li>
-<p>Checkbox für "Ausnahmespiel" kann optional in CSV angegeben werden</p>
+<p>Manuell erstellte Spiele können bearbeitet (Gegner/Ort/Uhrzeit/Spielklasse ändern) und gelöscht werden</p>
 </li>
 <li>
-<p>Bei Import werden automatisch neue Spiele erstellt</p>
+<p>Bei aus XTTV übernommenen Spielen sind Gegner, Ort und Termin nicht bearbeitbar; maßgeblich ist der Stand in XTTV</p>
+</li>
+<li>
+<p>Fallback: Admin kann einen Spielplan als CSV-Datei importieren (Mannschaft, Gegner, Ort, Datum, Uhrzeit), falls der XTTV-Abgleich nicht verfügbar ist</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fr_3_spieler_stammdaten_management"><a class="anchor" href="#_fr_3_spieler_stammdaten_management"></a>4.1.4. FR 3: Spieler-Stammdaten Management</h4>
+<h4 id="_fr_3_spieler_stammdaten_und_spielberechtigungen"><a class="anchor" href="#_fr_3_spieler_stammdaten_und_spielberechtigungen"></a>4.1.4. FR 3: Spieler-Stammdaten und Spielberechtigungen</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Admin importiert CSV-Datei mit Spielern: Name, Telefon, Spielklassen (mehrere möglich, komma-separiert)</p>
+<p>Admin importiert CSV-Datei mit Spielern: Name, Telefon sowie pro Liga des Vereins eine Spalte mit Ja/Nein-Wert (Boolean), ob der Spieler in dieser Liga spielen darf</p>
 </li>
 <li>
-<p>Admin kann Spieler hinzufügen/bearbeiten</p>
+<p>Ein erneuter Import aktualisiert bestehende Spieler und deren Spielberechtigungen</p>
 </li>
 <li>
-<p>Jeder Spieler kann mehreren Spielklassen zugeordnet sein</p>
+<p>Admin kann Spieler im Portal hinzufügen/bearbeiten/löschen</p>
+</li>
+<li>
+<p>Admin kann die Spielberechtigung jedes Spielers pro Liga direkt im Portal ändern (ohne erneuten CSV-Import)</p>
+</li>
+<li>
+<p>Jeder Spieler kann in mehreren Ligen spielberechtigt sein</p>
+</li>
+<li>
+<p>Die Spielberechtigung gilt pro Liga, nicht pro Mannschaft: Spielen zwei Mannschaften des Vereins in derselben Liga, darf der Spieler in beiden aufgestellt werden</p>
+</li>
+<li>
+<p>Wird einem Spieler die Berechtigung für eine Liga entzogen, bleiben vergangene Aufstellungen unverändert; bei zukünftigen Spielen dieser Liga wird der Spieler als "nicht mehr spielberechtigt" gekennzeichnet</p>
 </li>
 </ul>
 </div>
@@ -712,22 +758,66 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>Mannschaftsführer sieht Dashboard mit seinen Spielen seiner Mannschaft</p>
+<p>Mannschaftsführer sieht Dashboard mit den Spielen seiner Mannschaft</p>
 </li>
 <li>
-<p>Für jedes Spiel werden nur Spieler angezeigt, die in der Spielklasse des Spiels spielberechtigt sind</p>
+<p>Für jedes Spiel werden nur Spieler angezeigt, die in der Liga des Spiels spielberechtigt sind</p>
 </li>
 <li>
-<p>Neben jedem Spieler: Name, Telefon, Status (verfügbar/nicht verfügbar für dieses Spiel)</p>
+<p>Neben jedem Spieler: Name, Telefon und Status für die Woche des Spiels:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>frei</strong>: in dieser Woche noch keinem Spiel zugewiesen</p>
 </li>
 <li>
-<p>System zeigt an: Spieler hat bereits ein Spiel diese Woche (außer wenn Ausnahmespiel gekennzeichnet ist)</p>
+<p><strong>zugewiesen</strong>: bereits in einer Aufstellung dieser Woche, mit Angabe von Mannschaft und Spieltermin (auch wenn es eine andere Mannschaft ist)</p>
+</li>
+<li>
+<p><strong>nicht verfügbar</strong>: für dieses Spiel als nicht verfügbar markiert, mit Grund</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fr_5_spieler_verfügbarkeit_pro_spiel"><a class="anchor" href="#_fr_5_spieler_verfügbarkeit_pro_spiel"></a>4.1.6. FR 5: Spieler-Verfügbarkeit pro Spiel</h4>
+<h4 id="_fr_5_aufstellung_spielerzuweisung"><a class="anchor" href="#_fr_5_aufstellung_spielerzuweisung"></a>4.1.6. FR 5: Aufstellung (Spielerzuweisung)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Mannschaftsführer weist einem Spiel seiner Mannschaft Spieler zu (Aufstellung); eine vollständige Aufstellung besteht immer aus genau 4 Spielern</p>
+</li>
+<li>
+<p>Die Aufstellung wird für jedes Spiel einzeln festgelegt und kann von Spiel zu Spiel aus unterschiedlichen Spielern bestehen; es gibt keinen fixen Mannschaftskader</p>
+</li>
+<li>
+<p>Das System zeigt pro Spiel, wie viele Plätze besetzt und wie viele noch offen sind</p>
+</li>
+<li>
+<p>Zuweisungen können jederzeit geändert werden (Spieler entfernen, anderen Spieler zuweisen); alle Übersichten zeigen sofort den aktuellen Stand</p>
+</li>
+<li>
+<p><strong>Pro-Woche-Regel</strong>: Ein Spieler kann pro Woche (Montag-Sonntag) nur einem Spiel zugewiesen werden. Ist er bereits einem Spiel zugewiesen (egal welcher Mannschaft), verhindert das System eine weitere Zuweisung und zeigt an, bei welcher Mannschaft und welchem Spiel er eingeplant ist</p>
+</li>
+<li>
+<p><strong>Ausnahmespiel</strong>: Ist das Spiel als Ausnahmespiel gekennzeichnet, ist die Zuweisung trotz eines weiteren Spiels in derselben Woche erlaubt; Ausnahmespiele zählen nicht für die Pro-Woche-Regel</p>
+</li>
+<li>
+<p>Es können nur Spieler zugewiesen werden, die in der Liga des Spiels spielberechtigt und für das Spiel nicht als "nicht verfügbar" markiert sind</p>
+</li>
+<li>
+<p>Wochenübersicht: Für jede Woche ist ersichtlich, welcher Spieler bei welcher Mannschaft im Einsatz ist und welche spielberechtigten Spieler noch frei sind</p>
+</li>
+<li>
+<p>Wird ein Spiel durch den XTTV-Abgleich in eine andere Woche verlegt und entsteht dadurch ein Konflikt mit der Pro-Woche-Regel, bleibt die Aufstellung erhalten, wird aber für die betroffenen Mannschaftsführer als Konflikt gekennzeichnet</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fr_6_spieler_verfügbarkeit_pro_spiel"><a class="anchor" href="#_fr_6_spieler_verfügbarkeit_pro_spiel"></a>4.1.7. FR 6: Spieler-Verfügbarkeit pro Spiel</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -737,13 +827,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Mannschaftsführer kann einen Spieler für ein konkretes Spiel als "nicht verfügbar" markieren</p>
 </li>
 <li>
-<p>Grund muss angegeben werden (Freitextfeld): z.B. "Verletzt", "Krank", "Schon angefragt"</p>
+<p>Grund muss angegeben werden (Freitextfeld): z.B. "Verletzt", "Krank", "Abgesagt"</p>
 </li>
 <li>
 <p>Status wird pro Spiel gespeichert und kann wieder rückgängig gemacht werden</p>
 </li>
 <li>
-<p>Nach dem Spieldatum wird die Ungültig-Markierung automatisch gelöscht</p>
+<p>Nach dem Spieldatum wird die Markierung nicht mehr angezeigt</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fr_7_historie_und_änderungsprotokoll"><a class="anchor" href="#_fr_7_historie_und_änderungsprotokoll"></a>4.1.8. FR 7: Historie und Änderungsprotokoll</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Spiele und Aufstellungen bleiben nach dem Spieldatum erhalten und sind einsehbar (mindestens 2 Jahre)</p>
+</li>
+<li>
+<p>Jede Änderung wird protokolliert mit Zeitpunkt, Benutzer sowie altem und neuem Wert:</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Änderungen an Aufstellungen (Spieler zugewiesen/entfernt)</p>
+</li>
+<li>
+<p>Änderungen an Spielen (Termin oder Spielort durch XTTV-Abgleich, manuelle Bearbeitung, Ausnahmespiel-Kennzeichen)</p>
+</li>
+<li>
+<p>Änderungen an Verfügbarkeiten und Spielberechtigungen</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Mannschaftsführer sieht das Protokoll der Spiele seiner Mannschaft, Admin sieht alle Einträge</p>
 </li>
 </ul>
 </div>
@@ -775,7 +894,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p>System muss 50+ gleichzeitige Benutzer unterstützen</p>
+<p>System muss bis zu 11 gleichzeitige Benutzer unterstützen (10 Mannschaftsführer + Admin); Spieler haben keinen Zugang</p>
 </li>
 <li>
 <p>Datenbankzugriffe: max. 500ms pro Request</p>
@@ -787,7 +906,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_sicherheit"><a class="anchor" href="#_sicherheit"></a>4.2.3. Sicherheit</h4>
+<h4 id="_externe_schnittstelle_xttv"><a class="anchor" href="#_externe_schnittstelle_xttv"></a>4.2.3. Externe Schnittstelle (XTTV)</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Zugriffe auf XTTV sind auf das Notwendigste zu beschränken: ein Abruf pro Tag für den gesamten Verein, Ergebnisse werden lokal gespeichert</p>
+</li>
+<li>
+<p>Es wird der öffentliche CSV-Terminexport verwendet; die XML-Schnittstelle von XTTV (Registrierung erforderlich, nur nicht-kommerzielle Nutzung) ist eine mögliche spätere Erweiterung</p>
+</li>
+<li>
+<p>Unbekannte oder zusätzliche Spalten im Export dürfen den Abgleich nicht zum Abbruch bringen</p>
+</li>
+<li>
+<p>Ein Ausfall von XTTV darf die Nutzung des Portals nicht beeinträchtigen</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_sicherheit"><a class="anchor" href="#_sicherheit"></a>4.2.4. Sicherheit</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -809,7 +947,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect3">
-<h4 id="_browser_kompatibilität"><a class="anchor" href="#_browser_kompatibilität"></a>4.2.4. Browser-Kompatibilität</h4>
+<h4 id="_browser_kompatibilität"><a class="anchor" href="#_browser_kompatibilität"></a>4.2.5. Browser-Kompatibilität</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -858,8 +996,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <td class="tableblock halign-left valign-top"><p class="tableblock">Teams erreichen 95%+ Spielerquote (alle geplanten Spiele sind besetzt)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Bessere Ligaleistungen</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Durch optimierte Spielerzuordnung und weniger Ausfälle sollen Teams bessere Ergebnisse erzielen (Leistungsverbesserung um 10-15%)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keine händische Spielplanpflege</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100% der Meisterschaftsspiele werden automatisch aus XTTV übernommen; Terminverlegungen sind spätestens nach 24 Stunden im Portal sichtbar</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Weniger Ausfälle</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Kein Meisterschaftsspiel pro Saison wird wegen fehlender Spieler abgesagt oder unvollständig bestritten</p></td>
 </tr>
 </tbody>
 </table>
@@ -873,19 +1015,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Spieler</strong>: 50 aktive Spieler + 20% Reserve = 60 Spieler im System</p>
+<p><strong>Spieler</strong>: 60 aktive Spieler + 20% Reserve = 72 Spieler im System</p>
 </li>
 <li>
-<p><strong>Mannschaften</strong>: 9 Teams</p>
+<p><strong>Mannschaften</strong>: 10 Teams</p>
 </li>
 <li>
-<p><strong>Wöchentliche Spiele</strong>: 9 Spiele/Woche × 52 Wochen = 468 Spiele/Jahr</p>
+<p><strong>Spiele</strong>: ca. 165 Meisterschaftsspiele pro Saison (September bis April, Stand XTTV-Spielplan 2026/27), in Spitzenmonaten bis zu 10 Spiele/Woche</p>
 </li>
 <li>
-<p><strong>Spieler-Zuordnungen</strong>: ~36 Einträge/Woche (9 Spiele × 4 Spieler) = ~1.872 Einträge/Jahr</p>
+<p><strong>Spieler-Zuordnungen</strong>: bis zu 40 Einträge/Woche (10 Spiele × 4 Spieler) = ~660 Einträge/Saison</p>
 </li>
 <li>
-<p><strong>Historische Daten</strong>: Mindestens 2 Jahre archivieren</p>
+<p><strong>XTTV-Abgleich</strong>: 1 Abruf/Tag, ca. 165 Datensätze pro Abruf</p>
+</li>
+<li>
+<p><strong>Änderungsprotokoll</strong>: geschätzt 2.000-3.000 Einträge/Saison</p>
+</li>
+<li>
+<p><strong>Historische Daten</strong>: Spiele, Aufstellungen und Änderungen mindestens 2 Jahre aufbewahren</p>
 </li>
 </ul>
 </div>
@@ -898,7 +1046,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><strong>Peak-Zeit</strong>: Dienstags/Mittwochs 18:00-20:00 Uhr (Spielerauswahl vor Wochenendspiele)</p>
 </li>
 <li>
-<p><strong>Max. gleichzeitige Benutzer</strong>: 10 (9 Mannschaftsführer + Admin)</p>
+<p><strong>Max. gleichzeitige Benutzer</strong>: 11 (10 Mannschaftsführer + Admin)</p>
 </li>
 <li>
 <p><strong>Datenspeicher</strong>: ~500 MB für komplettes System (2 Jahre Historie)</p>
@@ -929,18 +1077,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Frontend</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Angular 16+</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Angular 22</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Modernes Framework, reaktive UI, TypeScript-Support, große Community</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Backend</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Quarkus 3.40 (LTS)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Optimiert für Cloud/Container, schnelle Startup-Zeit, ideal für REST-APIs</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Datenbank</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">PostgreSQL 18</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Robustes RDBMS, gute Performance, JSON-Support, beliebig skalierbar</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Spielplan-Daten</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">XTTV-Terminexport (CSV über HTTPS)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Öffentlich verfügbar, keine Registrierung nötig, enthält Termin und Spielort</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Container</p></td>
@@ -1003,16 +1156,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Dashboard mit seinen Spielen seiner Mannschaft</p>
 </li>
 <li>
-<p>Spiele erstellen/bearbeiten/löschen</p>
+<p>Aus XTTV übernommene Spiele einsehen; zusätzliche Spiele erstellen/bearbeiten/löschen</p>
 </li>
 <li>
 <p>Spieler-Liste mit Kontaktdaten (gefiltert nach Spielklasse des Spiels)</p>
 </li>
 <li>
+<p>Aufstellung für die Spiele seiner Mannschaft festlegen und ändern</p>
+</li>
+<li>
+<p>Wochenübersicht: welche Spieler bereits im Einsatz sind (inkl. Mannschaft und Spieltermin) und welche noch frei sind</p>
+</li>
+<li>
 <p>Spieler pro Spiel als "nicht verfügbar" markieren mit Grund</p>
 </li>
 <li>
-<p><strong>Beschränkung</strong>: Sieht nur die Spieler, die in den Spielklassen seiner Mannschaft spielberechtigt sind. Sieht nur seine Mannschaft und deren Spiele.</p>
+<p>Änderungsprotokoll der Spiele seiner Mannschaft einsehen</p>
+</li>
+<li>
+<p><strong>Beschränkung</strong>: Sieht nur die Spieler, die in den Ligen seiner Mannschaft spielberechtigt sind. Kann nur Spiele und Aufstellungen seiner eigenen Mannschaft bearbeiten; von anderen Mannschaften sieht er nur, welche Spieler dort in welcher Woche eingeplant sind.</p>
 </li>
 </ul>
 </div>
@@ -1031,10 +1193,22 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>CSV-Import für Spieler durchführen</p>
 </li>
 <li>
+<p>Spielberechtigungen der Spieler pro Liga im Portal ändern</p>
+</li>
+<li>
+<p>Gesamtes Änderungsprotokoll einsehen</p>
+</li>
+<li>
+<p>XTTV-Abgleich überwachen und manuell starten; Mannschaften den XTTV-Teams zuordnen</p>
+</li>
+<li>
 <p>Alle Mannschaften und Spiele einsehen</p>
 </li>
 <li>
 <p>Benutzer-Verwaltung (Mannschaftsführer anlegen/bearbeiten)</p>
+</li>
+<li>
+<p><strong>Person</strong>: Der Admin ist eine eigene Person und kein Mannschaftsführer</p>
 </li>
 <li>
 <p><strong>Aufgaben</strong>: Datenverwaltung, System-Konfiguration, Stammdaten-Pflege</p>
@@ -1061,7 +1235,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Spiele werden min. 7 Tage im Voraus geplant</p>
 </li>
 <li>
-<p>CSV-Dateien werden regelmäßig aktualisiert vom Admin</p>
+<p>Spieler-CSV-Dateien werden regelmäßig aktualisiert vom Admin</p>
 </li>
 <li>
 <p>Mannschaftsführer sind eindeutig ihrer Mannschaft zugeordnet</p>
@@ -1070,7 +1244,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Ein Mannschaftsführer verwaltet nur eine Mannschaft</p>
 </li>
 <li>
-<p>CSV-Spielplan enthält gültige Mannschaftsnamen aus dem System</p>
+<p>Der Spielplan im XTTV-Ergebnisdienst ist vollständig und aktuell; Terminverlegungen werden dort vom Verband bzw. den Vereinen eingetragen</p>
+</li>
+<li>
+<p>Der öffentliche XTTV-Terminexport bleibt in der derzeitigen Form verfügbar</p>
+</li>
+<li>
+<p>Jede Mannschaft im Portal ist genau einem XTTV-Team (Vereinskürzel + Teamnummer) zugeordnet</p>
 </li>
 </ol>
 </div>
@@ -1097,6 +1277,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li>
 <p>RC-Punkte werden nicht betrachtet; nur Spielklassen-Zugehörigkeit</p>
 </li>
+<li>
+<p>Cup-Spiele sind nicht Teil des Systems; es wird nur die Meisterschaft verwaltet</p>
+</li>
+<li>
+<p>Aus XTTV werden nur Spieltermine gelesen; es werden keine Daten an XTTV zurückgeschrieben (Ergebniseingabe erfolgt weiterhin direkt in XTTV)</p>
+</li>
 </ol>
 </div>
 </div>
@@ -1105,8 +1291,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.0<br>
-Last updated 2026-05-20 19:44:37 UTC
+Version 1.3.0<br>
+Last updated 2026-10-09 14:07:46 UTC
 </div>
 </div>
 </body>
