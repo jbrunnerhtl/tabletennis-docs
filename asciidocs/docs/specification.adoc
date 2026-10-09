@@ -293,7 +293,7 @@ UC7 --|> UC5 : "ändert Status"
 | Modernes Framework, reaktive UI, TypeScript-Support, große Community
 
 | Backend
-| Quarkus 3.40 (LTS)
+| Quarkus 3.40 (LTS) auf Java 27
 | Optimiert für Cloud/Container, schnelle Startup-Zeit, ideal für REST-APIs
 
 | Datenbank
