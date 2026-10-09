@@ -1,6 +1,6 @@
 = Pflichtenheft - Teamverwaltung
 :author: Jan Brunner
-:revnumber: 1.0.0
+:revnumber: 1.3.0
 :revdate: {docdate}
 :revremark: Spezifikation
 :icons: font
@@ -17,7 +17,7 @@
 
 === Organisationsübersicht
 
-Die Spielgemeinschaft Union Gutau-Pregarten ist ein Tischtennisverein in Oberösterreich mit etwa 50 aktiven Mitgliedern. Der Verein betreibt 9 Mannschaften, die an Ligameisterschaften in verschiedenen Leistungsklassen teilnehmen.
+Die Spielgemeinschaft Union Gutau-Pregarten ist ein Tischtennisverein in Oberösterreich mit etwa 60 aktiven Spielern. Der Verein betreibt 10 Mannschaften, die an Ligameisterschaften in verschiedenen Leistungsklassen teilnehmen.
 
 === Ligasystem und Spielklassen
 
@@ -25,7 +25,8 @@ Die österreichische Tischtennisliga funktioniert nach einem Klassifizierungssys
 
 * *Spielklassen*: Mannschaften werden in Klassen eingeteilt (z.B. 1. Bundesliga, 2. Bundesliga, Landesliga, Bezirksliga, etc.)
 * *Spielereignung*: Ein Spieler ist einer oder mehreren Spielklassen zugeordnet und darf nur in diesen Klassen spielen
-* *Wöchentliche Spiele*: Durchschnittlich 9 Spiele pro Woche mit je 4 Spielern pro Team
+* *Wöchentliche Spiele*: In Spielwochen bis zu 10 Spiele (eines je Mannschaft) mit je 4 Spielern pro Team
+* *Spielplan*: Der Verband (OÖTTV) veröffentlicht alle Spieltermine, Gegner und Spielorte im XTTV-Ergebnisdienst (https://oettv.xttv.at/ed/index.php?oid=191)
 * *Pro-Woche-Regel*: Ein Spieler kann maximal ein Spiel pro Woche (Montag-Sonntag) bestreiten, es sei denn es ist ein gekennzeichnetes Ausnahmespiel
 
 === Aktuelle Teamstruktur
@@ -43,7 +44,7 @@ Jede Mannschaft hat einen designierten Mannschaftsführer, der folgende Aufgaben
 
 Der Spielerauswahl-Prozess verläuft derzeit folgendermaßen:
 
-. Mannschaftsführer erhält Spielplan vom Verband
+. Mannschaftsführer sucht die Spieltermine seiner Mannschaft im XTTV-Ergebnisdienst des OÖTTV heraus
 . Mannschaftsführer telefoniert/schreibt Spieler einzeln an: „Bist du Freitag um 19:30 verfügbar?"
 . Spieler antworten per WhatsApp/Telefon mit Zusage oder Absage
 . Bei Absagen: Mannschaftsführer kontaktiert weitere Spieler aus der Liste
@@ -62,11 +63,13 @@ Das Kernproblem ist ein **manuelles, fehleranfälliges Verwaltungssystem**, das 
 . *Unreliable Kommunikation*: WhatsApp/Telefon ist fehleranfällig und nicht dokumentiert, unvollständige Kontaktdaten
 . *Spielererfüllung*: Teams haben oft nicht die volle Spieleranzahl → Spiele müssen abgesagt werden
 . *Ersatzspieler-Notfall*: Bei kurzfristigen Ausfällen keine Übersicht über verfügbare Spieler
+. *Doppelte Datenpflege*: Spieltermine und Spielorte stehen bereits im XTTV-Ergebnisdienst und müssten für eine eigene Übersicht händisch übertragen werden; Terminverlegungen werden leicht übersehen
 
 == Aufgabenstellung: Teamverwaltungs-Portal
 
 Es soll ein **zentrales Webportal** entwickelt werden, das:
 
+* Spieltermine, Gegner und Spielorte aller Mannschaften automatisch aus dem XTTV-Ergebnisdienst des OÖTTV übernimmt, sodass Spiele nicht händisch eingetragen werden müssen
 * Mannschaftsführern einen schnellen Überblick über verfügbare Spieler ihrer Spielklasse für ein Spiel bietet
 * Spieler-Kontaktdaten (Telefon) zentral speichert und schnell erreichbar macht
 * Pro Spiel festhalten kann, welche Spieler nicht verfügbar sind (Verletzung, krank, etc.)
@@ -87,6 +90,7 @@ skinparam ActorStyle awesome
 
 actor "Mannschaftsführer" as MF
 actor "Admin" as Admin
+actor "XTTV-Ergebnisdienst\n(OÖTTV)" as XTTV
 
 rectangle "Teamverwaltungs-Portal" {
   usecase "Spiele anzeigen" as UC1
@@ -95,13 +99,17 @@ rectangle "Teamverwaltungs-Portal" {
   usecase "Spiel löschen" as UC4
   
   usecase "Spieler anzeigen\n(gefiltert nach Klasse)" as UC5
-  usecase "Spieler zu Spiel\nhinzufügen" as UC5b
+  usecase "Aufstellung festlegen\n(Spieler zuweisen/entfernen)" as UC5b
+  usecase "Wochenübersicht anzeigen\n(zugewiesen / noch frei)" as UC5c
   usecase "Spieler als nicht verfügbar\nmarkieren" as UC6
   usecase "Verfügbarkeitsstatus\nwiederherstellen" as UC7
   
-  usecase "Spielplan-CSV\nimportieren" as UC8
+  usecase "Spielplan mit XTTV\nabgleichen" as UC8
+  usecase "Mannschaften XTTV-Teams\nzuordnen" as UC8b
   usecase "Spieler-CSV\nimportieren" as UC9
   usecase "Spieler verwalten\n(CRUD)" as UC10
+  usecase "Spielberechtigungen\nje Liga ändern" as UC10b
+  usecase "Änderungsprotokoll\neinsehen" as UC13
   usecase "Mannschaftsführer\nverwalten" as UC11
   usecase "Systemübersicht\nanzeigen" as UC12
 }
@@ -112,12 +120,17 @@ MF --> UC3
 MF --> UC4
 MF --> UC5
 MF --> UC5b
+MF --> UC5c
 MF --> UC6
 MF --> UC7
 
 Admin --> UC8
+Admin --> UC8b
+UC8 --> XTTV
 Admin --> UC9
 Admin --> UC10
+Admin --> UC10b
+Admin --> UC13
 Admin --> UC11
 Admin --> UC12
 
@@ -131,35 +144,69 @@ UC7 --|> UC5 : "ändert Status"
 @enduml
 ....
 
-==== FR 1: Spielverwaltung - Manuell
-* Mannschaftsführer kann Spiele manuell erstellen mit: Gegner, Ort (Adresse), Datum, Uhrzeit, Spielklasse, erforderliche Spieleranzahl (4)
-* Optional: Checkbox "Ausnahmespiel" mit Beschreibung (ermöglicht Spieler zweites Spiel in der Woche)
-* Spiele können bearbeitet werden (Gegner/Ort/Uhrzeit/Spielklasse ändern)
-* Spiele können gelöscht werden
+==== FR 1: Automatischer Spielplan-Abgleich mit XTTV
+* Das System übernimmt die Meisterschaftsspiele aller Mannschaften automatisch aus dem XTTV-Ergebnisdienst des OÖTTV; Spiele müssen nicht händisch eingetragen werden
+* Es werden ausschließlich Meisterschaftsspiele abgeglichen; Cup-Spiele werden nicht übernommen
+* Datenquelle ist der öffentliche Terminexport von XTTV für den gesamten Verein (Vereinskürzel `SGGP`): +
+`\https://oettv.xttv.at/public/ics_termine.php?vabkzg=SGGP&export=csv`
+* Übernommen werden pro Spiel: Heim- und Gastmannschaft, Liga, Durchgang und Runde, Spieltermin (Datum und Uhrzeit), Spielort (Hallenname, Straße, PLZ, Ort) sowie die XTTV-Spiel-ID (`meid`)
+* Die Zuordnung zur Mannschaft im Portal erfolgt über Vereinskürzel und Teamnummer (z.B. `SGGP` + `3`); die Spielklasse wird aus der Mannschaft übernommen
+* Der Abgleich läuft automatisch einmal täglich und kann vom Admin zusätzlich manuell gestartet werden
+* Spiele werden anhand der XTTV-Spiel-ID wiedererkannt: neue Spiele werden angelegt, geänderte Termine oder Spielorte (Verlegung, Platztausch) werden aktualisiert und für den Mannschaftsführer als geändert gekennzeichnet
+* Spiele, die in XTTV nicht mehr vorhanden sind, werden nicht automatisch gelöscht, sondern als "in XTTV entfernt" markiert
+* Im Portal erfasste Daten (Spielerzuordnung, Verfügbarkeiten, Ausnahmespiel-Kennzeichen) bleiben beim Abgleich erhalten
+* Vereinsinterne Spiele (zwei eigene Mannschaften in derselben Liga) erscheinen bei beiden Mannschaften
+* Ist XTTV nicht erreichbar, bleibt der letzte Datenstand bestehen; der Admin sieht Zeitpunkt und Ergebnis des letzten Abgleichs
 
-==== FR 2: Spielplan-Import
-* Admin kann CSV-Dateien mit Spielplänen importieren: Mannschaft, Gegner, Ort (Adresse), Datum, Uhrzeit
-* Spielklasse wird automatisch aus der Mannschaft übernommen
-* Checkbox für "Ausnahmespiel" kann optional in CSV angegeben werden
-* Bei Import werden automatisch neue Spiele erstellt
+==== FR 2: Spielverwaltung - Manuell
+* Mannschaftsführer kann zusätzliche Spiele, die nicht in XTTV stehen (z.B. Freundschaftsspiele), manuell erstellen mit: Gegner, Ort (Adresse), Datum, Uhrzeit, Spielklasse; die Spieleranzahl beträgt immer 4
+* Optional: Checkbox "Ausnahmespiel" mit Beschreibung (ermöglicht Spieler zweites Spiel in der Woche); kann auch bei aus XTTV übernommenen Spielen gesetzt werden
+* Manuell erstellte Spiele können bearbeitet (Gegner/Ort/Uhrzeit/Spielklasse ändern) und gelöscht werden
+* Bei aus XTTV übernommenen Spielen sind Gegner, Ort und Termin nicht bearbeitbar; maßgeblich ist der Stand in XTTV
+* Fallback: Admin kann einen Spielplan als CSV-Datei importieren (Mannschaft, Gegner, Ort, Datum, Uhrzeit), falls der XTTV-Abgleich nicht verfügbar ist
 
-==== FR 3: Spieler-Stammdaten Management
-* Admin importiert CSV-Datei mit Spielern: Name, Telefon, Spielklassen (mehrere möglich, komma-separiert)
-* Admin kann Spieler hinzufügen/bearbeiten
-* Jeder Spieler kann mehreren Spielklassen zugeordnet sein
+==== FR 3: Spieler-Stammdaten und Spielberechtigungen
+* Admin importiert CSV-Datei mit Spielern: Name, Telefon sowie pro Liga des Vereins eine Spalte mit Ja/Nein-Wert (Boolean), ob der Spieler in dieser Liga spielen darf
+* Ein erneuter Import aktualisiert bestehende Spieler und deren Spielberechtigungen
+* Admin kann Spieler im Portal hinzufügen/bearbeiten/löschen
+* Admin kann die Spielberechtigung jedes Spielers pro Liga direkt im Portal ändern (ohne erneuten CSV-Import)
+* Jeder Spieler kann in mehreren Ligen spielberechtigt sein
+* Die Spielberechtigung gilt pro Liga, nicht pro Mannschaft: Spielen zwei Mannschaften des Vereins in derselben Liga, darf der Spieler in beiden aufgestellt werden
+* Wird einem Spieler die Berechtigung für eine Liga entzogen, bleiben vergangene Aufstellungen unverändert; bei zukünftigen Spielen dieser Liga wird der Spieler als "nicht mehr spielberechtigt" gekennzeichnet
 
 ==== FR 4: Spieler-Übersicht für Mannschaftsführer
-* Mannschaftsführer sieht Dashboard mit seinen Spielen seiner Mannschaft
-* Für jedes Spiel werden nur Spieler angezeigt, die in der Spielklasse des Spiels spielberechtigt sind
-* Neben jedem Spieler: Name, Telefon, Status (verfügbar/nicht verfügbar für dieses Spiel)
-* System zeigt an: Spieler hat bereits ein Spiel diese Woche (außer wenn Ausnahmespiel gekennzeichnet ist)
+* Mannschaftsführer sieht Dashboard mit den Spielen seiner Mannschaft
+* Für jedes Spiel werden nur Spieler angezeigt, die in der Liga des Spiels spielberechtigt sind
+* Neben jedem Spieler: Name, Telefon und Status für die Woche des Spiels:
+** *frei*: in dieser Woche noch keinem Spiel zugewiesen
+** *zugewiesen*: bereits in einer Aufstellung dieser Woche, mit Angabe von Mannschaft und Spieltermin (auch wenn es eine andere Mannschaft ist)
+** *nicht verfügbar*: für dieses Spiel als nicht verfügbar markiert, mit Grund
 
-==== FR 5: Spieler-Verfügbarkeit pro Spiel
+==== FR 5: Aufstellung (Spielerzuweisung)
+* Mannschaftsführer weist einem Spiel seiner Mannschaft Spieler zu (Aufstellung); eine vollständige Aufstellung besteht immer aus genau 4 Spielern
+* Die Aufstellung wird für jedes Spiel einzeln festgelegt und kann von Spiel zu Spiel aus unterschiedlichen Spielern bestehen; es gibt keinen fixen Mannschaftskader
+* Das System zeigt pro Spiel, wie viele Plätze besetzt und wie viele noch offen sind
+* Zuweisungen können jederzeit geändert werden (Spieler entfernen, anderen Spieler zuweisen); alle Übersichten zeigen sofort den aktuellen Stand
+* *Pro-Woche-Regel*: Ein Spieler kann pro Woche (Montag-Sonntag) nur einem Spiel zugewiesen werden. Ist er bereits einem Spiel zugewiesen (egal welcher Mannschaft), verhindert das System eine weitere Zuweisung und zeigt an, bei welcher Mannschaft und welchem Spiel er eingeplant ist
+* *Ausnahmespiel*: Ist das Spiel als Ausnahmespiel gekennzeichnet, ist die Zuweisung trotz eines weiteren Spiels in derselben Woche erlaubt; Ausnahmespiele zählen nicht für die Pro-Woche-Regel
+* Es können nur Spieler zugewiesen werden, die in der Liga des Spiels spielberechtigt und für das Spiel nicht als "nicht verfügbar" markiert sind
+* Wochenübersicht: Für jede Woche ist ersichtlich, welcher Spieler bei welcher Mannschaft im Einsatz ist und welche spielberechtigten Spieler noch frei sind
+* Wird ein Spiel durch den XTTV-Abgleich in eine andere Woche verlegt und entsteht dadurch ein Konflikt mit der Pro-Woche-Regel, bleibt die Aufstellung erhalten, wird aber für die betroffenen Mannschaftsführer als Konflikt gekennzeichnet
+
+==== FR 6: Spieler-Verfügbarkeit pro Spiel
 * Standardmäßig sind alle Spieler verfügbar
 * Mannschaftsführer kann einen Spieler für ein konkretes Spiel als "nicht verfügbar" markieren
-* Grund muss angegeben werden (Freitextfeld): z.B. "Verletzt", "Krank", "Schon angefragt"
+* Grund muss angegeben werden (Freitextfeld): z.B. "Verletzt", "Krank", "Abgesagt"
 * Status wird pro Spiel gespeichert und kann wieder rückgängig gemacht werden
-* Nach dem Spieldatum wird die Ungültig-Markierung automatisch gelöscht
+* Nach dem Spieldatum wird die Markierung nicht mehr angezeigt
+
+==== FR 7: Historie und Änderungsprotokoll
+* Spiele und Aufstellungen bleiben nach dem Spieldatum erhalten und sind einsehbar (mindestens 2 Jahre)
+* Jede Änderung wird protokolliert mit Zeitpunkt, Benutzer sowie altem und neuem Wert:
+** Änderungen an Aufstellungen (Spieler zugewiesen/entfernt)
+** Änderungen an Spielen (Termin oder Spielort durch XTTV-Abgleich, manuelle Bearbeitung, Ausnahmespiel-Kennzeichen)
+** Änderungen an Verfügbarkeiten und Spielberechtigungen
+* Mannschaftsführer sieht das Protokoll der Spiele seiner Mannschaft, Admin sieht alle Einträge
 
 === Nicht-funktionale Anforderungen
 
@@ -170,9 +217,15 @@ UC7 --|> UC5 : "ändert Status"
 * Maximale Ladezeit: 3 Sekunden
 
 ==== Performance & Skalierbarkeit
-* System muss 50+ gleichzeitige Benutzer unterstützen
+* System muss bis zu 11 gleichzeitige Benutzer unterstützen (10 Mannschaftsführer + Admin); Spieler haben keinen Zugang
 * Datenbankzugriffe: max. 500ms pro Request
 * Verfügbarkeit: 99.5% Uptime (wartungsarbeiten ausgenommen)
+
+==== Externe Schnittstelle (XTTV)
+* Zugriffe auf XTTV sind auf das Notwendigste zu beschränken: ein Abruf pro Tag für den gesamten Verein, Ergebnisse werden lokal gespeichert
+* Es wird der öffentliche CSV-Terminexport verwendet; die XML-Schnittstelle von XTTV (Registrierung erforderlich, nur nicht-kommerzielle Nutzung) ist eine mögliche spätere Erweiterung
+* Unbekannte oder zusätzliche Spalten im Export dürfen den Abgleich nicht zum Abbruch bringen
+* Ein Ausfall von XTTV darf die Nutzung des Portals nicht beeinträchtigen
 
 ==== Sicherheit
 * Authentifizierung: Benutzerlogin (E-Mail + Passwort)
@@ -203,23 +256,28 @@ UC7 --|> UC5 : "ändert Status"
 | Teams erreichen 95%+ Spielerquote (alle geplanten Spiele sind besetzt)
 
 
-| Bessere Ligaleistungen
-| Durch optimierte Spielerzuordnung und weniger Ausfälle sollen Teams bessere Ergebnisse erzielen (Leistungsverbesserung um 10-15%)
+| Keine händische Spielplanpflege
+| 100% der Meisterschaftsspiele werden automatisch aus XTTV übernommen; Terminverlegungen sind spätestens nach 24 Stunden im Portal sichtbar
+
+| Weniger Ausfälle
+| Kein Meisterschaftsspiel pro Saison wird wegen fehlender Spieler abgesagt oder unvollständig bestritten
 
 |===
 
 == Mengengerüst
 
 === Datenvolumen
-* **Spieler**: 50 aktive Spieler + 20% Reserve = 60 Spieler im System
-* **Mannschaften**: 9 Teams
-* **Wöchentliche Spiele**: 9 Spiele/Woche × 52 Wochen = 468 Spiele/Jahr
-* **Spieler-Zuordnungen**: ~36 Einträge/Woche (9 Spiele × 4 Spieler) = ~1.872 Einträge/Jahr
-* **Historische Daten**: Mindestens 2 Jahre archivieren
+* **Spieler**: 60 aktive Spieler + 20% Reserve = 72 Spieler im System
+* **Mannschaften**: 10 Teams
+* **Spiele**: ca. 165 Meisterschaftsspiele pro Saison (September bis April, Stand XTTV-Spielplan 2026/27), in Spitzenmonaten bis zu 10 Spiele/Woche
+* **Spieler-Zuordnungen**: bis zu 40 Einträge/Woche (10 Spiele × 4 Spieler) = ~660 Einträge/Saison
+* **XTTV-Abgleich**: 1 Abruf/Tag, ca. 165 Datensätze pro Abruf
+* **Änderungsprotokoll**: geschätzt 2.000-3.000 Einträge/Saison
+* **Historische Daten**: Spiele, Aufstellungen und Änderungen mindestens 2 Jahre aufbewahren
 
 === Peak-Loads
 * **Peak-Zeit**: Dienstags/Mittwochs 18:00-20:00 Uhr (Spielerauswahl vor Wochenendspiele)
-* **Max. gleichzeitige Benutzer**: 10 (9 Mannschaftsführer + Admin)
+* **Max. gleichzeitige Benutzer**: 11 (10 Mannschaftsführer + Admin)
 * **Datenspeicher**: ~500 MB für komplettes System (2 Jahre Historie)
 
 == Rahmenbedingungen
@@ -231,16 +289,20 @@ UC7 --|> UC5 : "ändert Status"
 | Komponente | Technologie | Begründung
 
 | Frontend
-| Angular 16+
+| Angular 22
 | Modernes Framework, reaktive UI, TypeScript-Support, große Community
 
 | Backend
-| Quarkus
+| Quarkus 3.40 (LTS)
 | Optimiert für Cloud/Container, schnelle Startup-Zeit, ideal für REST-APIs
 
 | Datenbank
 | PostgreSQL 18
 | Robustes RDBMS, gute Performance, JSON-Support, beliebig skalierbar
+
+| Spielplan-Daten
+| XTTV-Terminexport (CSV über HTTPS)
+| Öffentlich verfügbar, keine Registrierung nötig, enthält Termin und Spielort
 
 | Container
 | Docker + Docker Compose
@@ -270,17 +332,24 @@ UC7 --|> UC5 : "ändert Status"
 === Rolle: Mannschaftsführer
 * **Zugriff**: 
   * Dashboard mit seinen Spielen seiner Mannschaft
-  * Spiele erstellen/bearbeiten/löschen
+  * Aus XTTV übernommene Spiele einsehen; zusätzliche Spiele erstellen/bearbeiten/löschen
   * Spieler-Liste mit Kontaktdaten (gefiltert nach Spielklasse des Spiels)
+  * Aufstellung für die Spiele seiner Mannschaft festlegen und ändern
+  * Wochenübersicht: welche Spieler bereits im Einsatz sind (inkl. Mannschaft und Spieltermin) und welche noch frei sind
   * Spieler pro Spiel als "nicht verfügbar" markieren mit Grund
-* **Beschränkung**: Sieht nur die Spieler, die in den Spielklassen seiner Mannschaft spielberechtigt sind. Sieht nur seine Mannschaft und deren Spiele.
+  * Änderungsprotokoll der Spiele seiner Mannschaft einsehen
+* **Beschränkung**: Sieht nur die Spieler, die in den Ligen seiner Mannschaft spielberechtigt sind. Kann nur Spiele und Aufstellungen seiner eigenen Mannschaft bearbeiten; von anderen Mannschaften sieht er nur, welche Spieler dort in welcher Woche eingeplant sind.
 
 === Rolle: Administrator
 * **Zugriff**: 
   * Spieler-Stammdaten verwalten (hinzufügen/bearbeiten/löschen)
   * CSV-Import für Spieler durchführen
+  * Spielberechtigungen der Spieler pro Liga im Portal ändern
+  * Gesamtes Änderungsprotokoll einsehen
+  * XTTV-Abgleich überwachen und manuell starten; Mannschaften den XTTV-Teams zuordnen
   * Alle Mannschaften und Spiele einsehen
   * Benutzer-Verwaltung (Mannschaftsführer anlegen/bearbeiten)
+* **Person**: Der Admin ist eine eigene Person und kein Mannschaftsführer
 * **Aufgaben**: Datenverwaltung, System-Konfiguration, Stammdaten-Pflege
 
 == Annahmen und Constraints
@@ -289,10 +358,12 @@ UC7 --|> UC5 : "ändert Status"
 . Spieler-Stammdaten im CSV sind aktuell und vollständig
 . Internet-Zugang ist für Mannschaftsführer verfügbar
 . Spiele werden min. 7 Tage im Voraus geplant
-. CSV-Dateien werden regelmäßig aktualisiert vom Admin
+. Spieler-CSV-Dateien werden regelmäßig aktualisiert vom Admin
 . Mannschaftsführer sind eindeutig ihrer Mannschaft zugeordnet
 . Ein Mannschaftsführer verwaltet nur eine Mannschaft
-. CSV-Spielplan enthält gültige Mannschaftsnamen aus dem System
+. Der Spielplan im XTTV-Ergebnisdienst ist vollständig und aktuell; Terminverlegungen werden dort vom Verband bzw. den Vereinen eingetragen
+. Der öffentliche XTTV-Terminexport bleibt in der derzeitigen Form verfügbar
+. Jede Mannschaft im Portal ist genau einem XTTV-Team (Vereinskürzel + Teamnummer) zugeordnet
 
 === Constraints
 . Keine Benachrichtigungen an Spieler notwendig (rein für interne Verwaltung)
@@ -301,3 +372,5 @@ UC7 --|> UC5 : "ändert Status"
 . Keine automatischen Zuordnungen; Mannschaftsführer entscheidet selbst wer angefragt wird
 . **Pro-Woche-Regel**: Spieler können maximal ein Spiel pro Woche spielen (Montag-Sonntag), Ausnahmespiele sind gekennzeichnet
 . RC-Punkte werden nicht betrachtet; nur Spielklassen-Zugehörigkeit
+. Cup-Spiele sind nicht Teil des Systems; es wird nur die Meisterschaft verwaltet
+. Aus XTTV werden nur Spieltermine gelesen; es werden keine Daten an XTTV zurückgeschrieben (Ergebniseingabe erfolgt weiterhin direkt in XTTV)
